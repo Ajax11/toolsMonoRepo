@@ -1,0 +1,90 @@
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    # Ruff version.
+    rev: v0.15.12
+    hooks:
+      # Run the linter.
+      - id: ruff-check
+        stages: [pre-commit]
+        #args: [ --fix ]
+      # Run the formatter.
+      #- id: ruff-format
+  #- repo: https://github.com/psf/black
+    # Black version
+  #  rev: 25.9.0
+  #  hooks:
+  #    - id: black
+  #      args: [--line-length=88]
+  #      language_version: python3.14
+  - repo: https://github.com/PyCQA/bandit
+    #rev: 1.7.9
+    rev: 1.9.2
+    hooks:
+      - id: bandit
+        args: ["-r"]
+        stages: [pre-commit]
+  - repo: local
+    hooks:
+      - id: eslint
+        name: ESLint Linter (local)
+        entry: bash -c 'cd frontend && pnpm exec eslint "${@#frontend/}"' --
+        #entry: pnpm -C frontend exec eslint
+        language: system
+        types: [file]
+        # Filter by extension
+        files: \.(js|jsx|ts|tsx)$
+        stages: [pre-commit]
+        description: This hook scans the frontend files for code vulnerabilities.
+  - repo: local
+    hooks:
+      - id: semgrep-scan
+        name: Semgrep Security Scan (local)
+        entry: ./.venv/Scripts/semgrep.exe scan
+        language: system
+        types: [ file ]
+    # Filter by extension
+        files: \.(js|jsx|ts|tsx)$
+        args: [
+          '--config', 'auto',
+          '--error',
+          '--quiet',
+          '--skip-unknown-extensions'
+        ]
+        stages: [ pre-commit ]
+        description: This hook scans the frontend files for code vulnerabilities.
+  - repo: local
+    hooks:
+      - id: trivy-scan-root
+        name: Trivy Security Scan - Root  (local)
+        entry: trivy fs --scanners vuln --quiet --exit-code 1 --file-patterns 'pip:.*requirements.*\.txt' ./requirements
+        language: system
+        pass_filenames: false
+        stages: [pre-push]
+        description: This hook scans dependency manifest files located strictly in the project root, skipping all subdirectories.
+  - repo: local
+    hooks:
+      - id: trivy-scan-backend
+        name: Trivy Security Scan - Backend (local)
+        entry: trivy fs --scanners vuln --quiet --exit-code 1 --file-patterns 'pip:.*requirements.*\.txt' ./backend/requirements
+        language: system
+        pass_filenames: false
+        stages: [pre-push]
+        description: This hook scans dependency manifest files located in backend directory.
+  - repo: local
+    hooks:
+      - id: trivy-scan-frontend
+        name: Trivy Security Scan - Frontend (local)
+        entry: trivy fs --scanners vuln --quiet --exit-code 1 ./frontend/pnpm-lock.yaml
+        language: system
+        pass_filenames: false
+        stages: [pre-push]
+        description: This hook scans dependency manifest files located in frontend directory.
+
+#  - repo: local
+#    hooks:
+#      - id: trivy-scan
+#        name: Trivy Security Scan (local)
+#        entry: trivy fs --scanners vuln --quiet --exit-code 1 . --file-patterns "pip:.*requirements.*\.txt"
+#        language: system
+#        pass_filenames: false
+#        stages: [pre-push]
