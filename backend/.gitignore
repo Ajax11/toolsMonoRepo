@@ -219,4 +219,4 @@ back/
 trivy/
 #.sonar/
 
-xample_vuln/
+#xample_vuln/
