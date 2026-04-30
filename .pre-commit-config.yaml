@@ -39,7 +39,7 @@ repos:
     hooks:
       - id: semgrep-scan
         name: Semgrep Security Scan (local)
-        entry: ./.venv/bin/semgrep scan
+        entry: ./.venv/Scripts/semgrep.exe scan
         language: system
         types: [ file ]
     # Filter by extension
