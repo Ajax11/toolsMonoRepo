@@ -67,3 +67,33 @@ target-version = ['py314']
 include = '\.pyi?$'
 # 'extend-exclude' excludes files or directories in addition to the defaults
 #extend-exclude =
+
+[tool.bandit]
+exclude_dirs = [
+    "venv",
+    ".venv",
+    "env",
+    "__pycache__",
+    "build",
+    "dist",
+    ".git",
+    "back",
+    "Licen",
+    "pythonPyt",
+    "requirements",
+    "trivy-output",
+    "db.sqlite3",
+    "migrations",
+    "staticfiles",
+    "media",
+    "node_modules"
+]
+
+# skips sections is to omit rules on the project
+# Safety tests to omit
+skips = [
+    "B101",  # assert used
+]
+
+# exclude section is to exclude files by specifying the path
+#exclude = []
