@@ -4,4 +4,3 @@ pip-tools
 ruff
 bandit
 black
-pre-commit

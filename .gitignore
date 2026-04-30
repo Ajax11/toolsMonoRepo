@@ -218,3 +218,5 @@ back/
 # Add Trivy space work
 trivy/
 #.sonar/
+
+.pre-commit-config.yaml
